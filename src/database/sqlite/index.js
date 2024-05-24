@@ -1,17 +1,17 @@
-const sqlite3 = require("sqlite3");
-const sqlite = require("sqlite");
-const path = require("path");
+const sqliteConnection = require('../../database/sqlite')
 
-async function sqliteConnection() {
+const createUsers = require('./migrations/createUsers')
 
-    const database = await sqlite.open({
+async function migrationsRun() {
+    const schemas = [
 
-        filename: path.resolve(__dirname, "..", "database.db"),
-        driver: sqlite3.Database
-    });
+        createUsers
 
-    return database;
+    ].join('');
 
+    sqliteConnection()
+        .then(db => db.exec(schemas))
+        .catch(error => console.error(error))
 }
 
-module.exports = sqliteConnection;
+module.exports = migrationsRun;
